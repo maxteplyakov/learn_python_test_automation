@@ -2,7 +2,7 @@
 import pytest, os
 
 from contact import Contact
-from application import Application
+from fixtures.application import Application
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ def test_add_contact(app):
             middle_name="Middle name",
             last_name="Last name",
             nickname="Nickname",
-            photo=os.path.abspath('photo.jpg'),
+            photo=os.path.abspath('../photo.jpg'),
             title="Title", company="Company",
             address="Address",
             home_phone_num="222-22-22",
