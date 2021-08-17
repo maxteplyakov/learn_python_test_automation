@@ -4,7 +4,6 @@ from models.contact import Contact
 
 
 def test_update_first_contact(app):
-    app.session.login(username="admin", password="secret")
     app.contact.update(
         Contact(
             first_name="Changed_name",
@@ -28,16 +27,14 @@ def test_update_first_contact(app):
             home_phone_2="73913121010",
             notes="some notes")
     )
-    app.session.logout()
 
 
 def test_update_first_contact_name(app):
-    app.session.login(username="admin", password="secret")
     app.contact.update(
         Contact(
             first_name="2nd time Changed_name",
             middle_name='changed middle name'
         )
     )
-    app.session.logout()
+
 
