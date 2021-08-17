@@ -11,7 +11,7 @@ def test_update_first_contact(app):
             middle_name="Changed Middle name",
             last_name="Changed Last name",
             nickname="Nickname",
-            photo=os.path.abspath('../photo.jpg'),
+            # photo=os.path.abspath('../photo.jpg'),
             title="Title", company="Company",
             address="Address",
             home_phone_num="222-22-22",
@@ -29,3 +29,15 @@ def test_update_first_contact(app):
             notes="some notes")
     )
     app.session.logout()
+
+
+def test_update_first_contact_name(app):
+    app.session.login(username="admin", password="secret")
+    app.contact.update(
+        Contact(
+            first_name="2nd time Changed_name",
+            middle_name='changed middle name'
+        )
+    )
+    app.session.logout()
+
