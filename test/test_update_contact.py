@@ -4,6 +4,8 @@ from models.contact import Contact
 
 
 def test_update_first_contact(app):
+    if app.contact.count() == 0:
+        app.contact.create(Contact(first_name='John', last_name='Doe'))
     app.contact.update(
         Contact(
             first_name="Changed_name",
@@ -30,6 +32,8 @@ def test_update_first_contact(app):
 
 
 def test_update_first_contact_name(app):
+    if app.contact.count() == 0:
+        app.contact.create(Contact(first_name='John', last_name='Doe'))
     app.contact.update(
         Contact(
             first_name="2nd time Changed_name",
