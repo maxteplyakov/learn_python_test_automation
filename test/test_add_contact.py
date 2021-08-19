@@ -5,11 +5,11 @@ from models.contact import Contact
 
 
 def test_add_contact(app):
-    app.contact.create(
-        Contact(
-            first_name="First name",
-            middle_name="Middle name",
-            last_name="Last name",
+    old_contacts_list = app.contact.get_contacts_list()
+    contact = Contact(
+            first_name="Firstname",
+            middle_name="Middlename",
+            last_name="Lastname",
             nickname="Nickname",
             photo=os.path.abspath('../photo.jpg'),
             title="Title", company="Company",
@@ -26,6 +26,11 @@ def test_add_contact(app):
             ayear="1867",
             address2="addr2",
             home_phone_2="73913121010",
-            notes="some notes")
+            notes="some notes"
     )
-
+    app.contact.create(contact)
+    new_contacts_list = app.contact.get_contacts_list()
+    assert len(old_contacts_list) + 1 == len(new_contacts_list)
+    old_contacts_list.append(contact)
+    assert sorted(old_contacts_list, key=Contact.id_or_max) ==\
+           sorted(new_contacts_list, key=Contact.id_or_max)

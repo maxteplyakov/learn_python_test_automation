@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+from models.contact import Contact
 
 
 class ContactHelper:
@@ -81,7 +82,6 @@ class ContactHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(value)
 
-
     def delete_first_contact(self):
         wd = self.app.wd
         self.app.open_home_page()
@@ -92,5 +92,21 @@ class ContactHelper:
 
     def count(self):
         wd = self.app.wd
-        self.app.open_home_page
+        self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contacts_list(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        contacts_list = []
+        for el in wd.find_elements_by_name('entry'):
+            full_name = el.text
+            id = el.find_element_by_name('selected[]').get_attribute('value')
+            contacts_list.append(
+                Contact(
+                    last_name=full_name.split()[0],
+                    first_name=full_name.split()[1],
+                    id=id
+                )
+            )
+        return contacts_list
