@@ -19,6 +19,7 @@ class ContactHelper:
         # submit form
         wd.find_element_by_name("submit").click()
         self.return_to_home_page()
+        self.contacts_cache = None
 
     def update(self, contact):
         wd = self.app.wd
@@ -28,6 +29,7 @@ class ContactHelper:
         self.fill_contact_form(contact)
         # submit form
         wd.find_element_by_name("update").click()
+        self.contacts_cache = None
 
     def fill_contact_form(self, contact):
         wd = self.app.wd
@@ -89,24 +91,28 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.app.open_home_page()
+        self.contacts_cache = None
 
     def count(self):
         wd = self.app.wd
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    contacts_cache = None
+
     def get_contacts_list(self):
-        wd = self.app.wd
-        self.app.open_home_page()
-        contacts_list = []
-        for el in wd.find_elements_by_name('entry'):
-            full_name = el.text
-            id = el.find_element_by_name('selected[]').get_attribute('value')
-            contacts_list.append(
-                Contact(
-                    last_name=full_name.split()[0],
-                    first_name=full_name.split()[1],
-                    id=id
+        if self.contacts_cache is None:
+            wd = self.app.wd
+            self.app.open_home_page()
+            self.contacts_cache = []
+            for el in wd.find_elements_by_name('entry'):
+                full_name = el.text
+                id = el.find_element_by_name('selected[]').get_attribute('value')
+                self.contacts_cache.append(
+                    Contact(
+                        last_name=full_name.split()[0],
+                        first_name=full_name.split()[1],
+                        id=id
+                    )
                 )
-            )
-        return contacts_list
+        return list(self.contacts_cache)
