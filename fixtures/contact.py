@@ -1,3 +1,5 @@
+import re
+
 from selenium.webdriver.support.ui import Select
 from models.contact import Contact
 
@@ -6,7 +8,6 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-# не используется???
     def return_to_home_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("home").click()
@@ -21,11 +22,21 @@ class ContactHelper:
         self.return_to_home_page()
         self.contacts_cache = None
 
+    def open_contact_for_update_by_index(self, index):
+        wd = self.app.wd
+        self.app.open_home_page()
+        row = wd.find_elements_by_name('entry')[index]
+        row.find_element_by_xpath("//img[@alt='Edit']").click()
+
+    def open_contact_for_view_by_index(self, index):
+        wd = self.app.wd
+        self.app.open_home_page()
+        row = wd.find_elements_by_name('entry')[index]
+        row.find_element_by_xpath("//img[@alt='Details']").click()
+
     def update_contact_by_index(self, index, contact):
         wd = self.app.wd
-        # init contact creation
-        self.app.open_home_page()
-        wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
+        self.open_contact_for_update_by_index(index)
         self.fill_contact_form(contact)
         # submit form
         wd.find_element_by_name("update").click()
@@ -111,14 +122,58 @@ class ContactHelper:
             wd = self.app.wd
             self.app.open_home_page()
             self.contacts_cache = []
-            for el in wd.find_elements_by_name('entry'):
-                full_name = el.text
-                id = el.find_element_by_name('selected[]').get_attribute('value')
+            for row in wd.find_elements_by_name('entry'):
+                cells = row.find_elements_by_tag_name("td")
+                first_name = cells[1].text
+                last_name = cells[2].text
+                id = cells[0].find_element_by_tag_name('input').get_attribute(
+                    'value'
+                )
+                all_phones = cells[5].text
                 self.contacts_cache.append(
                     Contact(
-                        last_name=full_name.split()[0],
-                        first_name=full_name.split()[1],
-                        id=id
+                        last_name=last_name,
+                        first_name=first_name,
+                        id=id,
+                        all_phones_from_homepage=all_phones
                     )
                 )
         return list(self.contacts_cache)
+
+    def get_contact_info_from_editpage(self, index):
+        self.open_contact_for_update_by_index(index)
+        wd = self.app.wd
+        first_name = wd.find_element_by_name("firstname").get_attribute("value")
+        last_name = wd.find_element_by_name("lastname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        home_phone_num = wd.find_element_by_name("home").get_attribute("value")
+        work_phone_num = wd.find_element_by_name("work").get_attribute("value")
+        cell_phone_num = wd.find_element_by_name("mobile").get_attribute("value")
+        home_phone_2 = wd.find_element_by_name("phone2").get_attribute("value")
+        return Contact(
+            first_name=first_name,
+            last_name=last_name,
+            id=id,
+            home_phone_num=home_phone_num,
+            cell_phone_num=cell_phone_num,
+            work_phone_num=work_phone_num,
+            home_phone_2=home_phone_2
+        )
+
+    def get_contact_from_viewpage(self, index):
+        wd = self.app.wd
+        self.open_contact_for_view_by_index(index)
+        text = wd.find_element_by_id("content").text
+        # home_phone_num = re.search("H: (.*)", text).group(1)
+        # work_phone_num = re.search("W: (.*)", text).group(1)
+        # cell_phone_num = re.search("M: (.*)", text).group(1)
+        # home_phone_2 = re.search("P: (.*)", text).group(1)
+        all_phones = []
+        for phone_type in ['H:', 'W:', 'M', 'P:']:
+            try:
+                all_phones.append(re.search(f"{phone_type} (.*)", text).group(1))
+            except:
+                pass
+        return Contact(
+            all_phones_from_viewpage=''.join(all_phones)
+        )
