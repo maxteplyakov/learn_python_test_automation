@@ -62,7 +62,7 @@ testdata = [
                 address2=random_string("address2", 100),
                 home_phone_2=random_phone_num(),
                 notes=random_string("notes", 30),
-            ) for _ in range(10)
+            ) for _ in range(3)
     ]
 
 
