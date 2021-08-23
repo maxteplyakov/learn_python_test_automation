@@ -131,3 +131,5 @@ dmypy.json
 # pycharm staff
 .idea
 idea/
+
+data/*.json

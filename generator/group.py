@@ -1,7 +1,7 @@
 import random
 import string
 import os.path
-import json
+import jsonpickle
 import getopt
 import sys
 
@@ -37,7 +37,7 @@ testdata = [Group(name='', header='', footer='')] + [
             name=random_string("name", 10),
             header=random_string("header", 20),
             footer=random_string("footer", 30)
-        ) for _ in range (n)
+        ) for _ in range(n)
 ]
 
 file = os.path.join(
@@ -45,4 +45,5 @@ file = os.path.join(
 )
 
 with open(file, "w") as output:
-    output.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
+    jsonpickle.set_encoder_options("json", indent=2)
+    output.write(jsonpickle.encode(testdata))
