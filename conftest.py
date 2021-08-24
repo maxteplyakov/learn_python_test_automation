@@ -10,7 +10,7 @@ from fixtures.application import Application
 fixture = None
 target = None
 
-@pytest.fixture (scope="session")
+@pytest.fixture
 def app(request):
     global fixture
     global target
@@ -38,6 +38,12 @@ def stop(request):
         fixture.destroy()
     request.addfinalizer(fin)
     return fixture
+
+
+@pytest.fixture(scope="session")
+def db(request):
+    pass
+
 
 
 def pytest_addoption(parser):
