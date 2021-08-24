@@ -13,3 +13,12 @@ def test_delete_random_group(app):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups[index:index+1] = []
     assert old_groups == new_groups
+
+
+def test_delete_all_groups(app):
+    '''
+    это пока не тест, просто удобный способ удалить все группы, чтобы не тыкать
+    в каждую в вебе
+    '''
+    app.group.delete_all_groups()
+

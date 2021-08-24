@@ -4,8 +4,8 @@ import pytest
 from models.contact import Contact
 
 
-@pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
-def test_add_contact(app, contact):
+def test_add_contact(app, json_contacts):
+    contact = json_contacts
     old_contacts_list = app.contact.get_contacts_list()
     app.contact.create(contact)
     new_contacts_list = app.contact.get_contacts_list()

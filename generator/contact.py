@@ -1,7 +1,7 @@
 import random
 import string
 import os.path
-import json
+import jsonpickle
 import getopt
 import sys
 
@@ -90,4 +90,5 @@ file = os.path.join(
 )
 
 with open(file, "w") as output:
-    output.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
+    jsonpickle.set_encoder_options("json", indent=2)
+    output.write(jsonpickle.encode(testdata))

@@ -50,6 +50,12 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
 
+    def select_all_groups(self):
+        wd = self.app.wd
+        checkbox_list = wd.find_elements_by_name("selected[]")
+        for checkbox in checkbox_list:
+            checkbox.click()
+
     def fill_group_form(self, group):
         wd = self.app.wd
         self.set_field_value("group_name", group.name)
@@ -75,6 +81,15 @@ class GroupHelper:
         self.return_to_groups_page()
         self.group_cache = None
 
+    def delete_all_groups(self):
+        wd = self.app.wd
+        self.open_groups_page()
+        # select first group
+        self.select_all_groups()
+        # submit deletion
+        wd.find_element_by_name("delete").click()
+        self.return_to_groups_page()
+        self.group_cache = None
 
     def count(self):
         wd = self.app.wd
