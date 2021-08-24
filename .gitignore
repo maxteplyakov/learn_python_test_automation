@@ -133,3 +133,7 @@ dmypy.json
 idea/
 
 data/*.json
+data/.json
+data.json
+data.contacts
+data.groups

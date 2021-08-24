@@ -36,8 +36,7 @@ def random_string(prefix, maxlen):
 
 def random_email():
     username_symbols = string.ascii_letters +\
-                       string.digits +\
-                       string.punctuation
+                       string.digits
     domain_symbols = string.ascii_letters + string.digits
     username = ''.join([random.choice(username_symbols) for
                         i in range(random.randrange(20))])
