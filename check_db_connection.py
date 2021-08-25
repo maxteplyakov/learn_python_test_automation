@@ -6,7 +6,7 @@ connection = pymysql.connect(
 
 try:
     cursor = connection.cursor()
-    cursor.execute("select * from group_list")
+    cursor.execute("select * from addressbook")
     for row in cursor.fetchall():
         print(row)
 finally:

@@ -4,15 +4,17 @@ import pytest
 from models.contact import Contact
 
 
-def test_add_contact(app, json_contacts):
+def test_add_contact(app, db, check_ui, json_contacts):
     contact = json_contacts
-    old_contacts_list = app.contact.get_contacts_list()
+    old_contacts_list = db.get_contact_list()
     app.contact.create(contact)
-    new_contacts_list = app.contact.get_contacts_list()
-    assert len(old_contacts_list) + 1 == len(new_contacts_list)
+    new_contacts_list = db.get_contact_list()
+    # assert len(old_contacts_list) + 1 == len(new_contacts_list)
     old_contacts_list.append(contact)
-    assert sorted(old_contacts_list, key=Contact.id_or_max) ==\
-           sorted(new_contacts_list, key=Contact.id_or_max)
+    assert old_contacts_list == new_contacts_list
+    if check_ui:
+        assert sorted(new_contacts_list, key=Contact.id_or_max) ==\
+               sorted(app.contact.get_contacts_list(), key=Contact.id_or_max)
 
 
 # def test_add_contact(app):
