@@ -29,6 +29,10 @@ class ContactHelper:
         cell = row.find_elements_by_tag_name('td')[7]
         cell.find_element_by_tag_name('a').click()
 
+    def open_contact_for_update_by_id(self, id):
+        wd = self.app.wd
+        wd.get(f"{self.app.base_url}edit.php?id={id}")
+
     def open_contact_for_view_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
@@ -39,6 +43,14 @@ class ContactHelper:
     def update_contact_by_index(self, index, contact):
         wd = self.app.wd
         self.open_contact_for_update_by_index(index)
+        self.fill_contact_form(contact)
+        # submit form
+        wd.find_element_by_name("update").click()
+        self.contacts_cache = None
+
+    def update_contact_by_id(self, id, contact):
+        wd = self.app.wd
+        self.open_contact_for_update_by_id(id)
         self.fill_contact_form(contact)
         # submit form
         wd.find_element_by_name("update").click()
@@ -100,10 +112,23 @@ class ContactHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(value)
 
+    def select_contact_by_ib(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
     def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
         wd.find_elements_by_name("selected[]")[index].click()
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to_alert().accept()
+        self.app.open_home_page()
+        self.contacts_cache = None
+
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_ib(id)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.app.open_home_page()
@@ -131,6 +156,8 @@ class ContactHelper:
                 id = cells[0].find_element_by_tag_name('input').get_attribute(
                     'value'
                 )
+                # id = cells[0].find_element_by_name('selected[]').get_attribute(
+                #     'value')
                 all_phones = cells[5].text
                 all_emails = cells[4].text
                 self.contacts_cache.append(
