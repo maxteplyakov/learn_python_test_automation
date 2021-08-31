@@ -19,6 +19,26 @@ def test_phones_on_contact_view_page(app):
            merge_phones_like_on_viewpage(contact_from_editpage)
 
 
+def test_all_contacts_info_on_homepage_editpage(app, db):
+    if app.contact.count() == 0:
+        app.contact.create(
+            Contact(
+                first_name='John', last_name='Doe',
+                home_phone_num='1111111',
+                cell_phone_num='2222222',
+                work_phone_num='3333333',
+                home_phone_2='4444444',
+                email1='somemail@mail.kz',
+                address='3rd builders st.'
+            )
+        )
+    contacts_from_homepage = app.contact.get_contacts_list()
+    contacts_from_db = db.get_contact_list()
+    assert len(contacts_from_homepage) == len(contacts_from_db)
+    assert sorted(contacts_from_homepage, key=Contact.id_or_max) ==\
+           sorted(contacts_from_db, key=Contact.id_or_max)
+
+
 def test_random_contact_info_on_homepage_editpage(app):
     if app.contact.count() == 0:
         app.contact.create(
