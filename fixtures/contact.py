@@ -112,7 +112,7 @@ class ContactHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(value)
 
-    def select_contact_by_ib(self, id):
+    def select_contact_by_id(self, id):
         wd = self.app.wd
         wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
@@ -128,7 +128,7 @@ class ContactHelper:
     def delete_contact_by_id(self, id):
         wd = self.app.wd
         self.app.open_home_page()
-        self.select_contact_by_ib(id)
+        self.select_contact_by_id(id)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.app.open_home_page()
@@ -215,3 +215,23 @@ class ContactHelper:
         return Contact(
             all_phones_from_viewpage=''.join(all_phones)
         )
+
+    def add_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        # self.app.open_home_page - я не знаю почему, но здесь это не
+        # срабатывает, приходится принудительно открывать стрраницу
+        # строчкой ниже
+        wd.get('http://localhost/addressbook/')
+        self.select_contact_by_id(contact.id)
+        # wd.find_element_by_name('to_group')
+        self.choose_value("to_group", group.name)
+        wd.find_element_by_name('add').click()
+        wd.find_element_by_link_text('group page "%s"' % group.name).click()
+
+    def delete_contact_from_group(self, contact, group):
+        wd = self.app.wd
+        self.app.open_home_page
+        self.choose_value("group", group.name)
+        self.select_contact_by_id(contact.id)
+        wd.find_element_by_name('remove').click()
+        wd.find_element_by_link_text('group page "%s"' % group.name).click()

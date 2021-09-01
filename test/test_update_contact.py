@@ -33,7 +33,7 @@ def test_update_first_contact(app):
 
 
 def test_update_random_contact_name(app, db, check_ui):
-    if app.contact.count() == 0:
+    if len(db.get_contact_list()) == 0:
         app.contact.create(Contact(first_name='John', last_name='Doe'))
     old_contacts_list = db.get_contact_list()
     contact = random.choice(old_contacts_list)

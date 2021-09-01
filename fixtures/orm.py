@@ -90,3 +90,6 @@ class ORMFixture:
                 orm_group not in c.groups
             )
         )
+
+    def destroy(self):
+        pass
