@@ -1,8 +1,11 @@
+allure-pytest==2.9.43
+allure-python-commons==2.9.43
 atomicwrites==1.4.0
 attrs==21.2.0
 colorama==0.4.4
 iniconfig==1.1.1
 jsonpickle==2.0.0
+lxml-4.6.3-cp38-cp38-win32.whl
 mysql-connector-python==8.0.26
 packaging==21.0
 pluggy==0.13.1
@@ -16,3 +19,4 @@ selenium==3.141.0
 six==1.16.0
 toml==0.10.2
 urllib3==1.26.6
+

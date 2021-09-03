@@ -132,8 +132,8 @@ dmypy.json
 .idea
 idea/
 
-data/*.json
-data/.json
-data.json
-data.contacts
-data.groups
+.allure*
+/allure*
+.allure-reuslts
+/allure-reuslts
+.alure-reports
